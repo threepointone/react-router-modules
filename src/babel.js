@@ -44,7 +44,6 @@ module.exports = {
       }
 
       if (path.node.openingElement.name.name === "Route") {
-        console.log(path.node);
         // if component, throw error
         // if render, wrap
         // if children, wrap
@@ -58,7 +57,7 @@ module.exports = {
               <Module.default {...rest} /> : 
               <Module {...rest} />) : 
             null`;
-        let wrapped = attrModule ? wrap(renderSrc, m.value) : null;
+        let wrapped = attrModule ? wrap(renderSrc, attrModule.value) : null;
         if (wrapped) {
           attrRender.expression = babylon.parse(wrapped, {
             plugins: [ "*" ]

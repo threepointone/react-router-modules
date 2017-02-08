@@ -27,7 +27,8 @@ export function wrap(fn, { module, load }) {
       // todo - check if in browser, warn that babel hasn't been added
       // todo - defer
       // load only if url matches pattern
-      let Module = require(module);
+      let rrr = eval('require')
+      let Module = rrr(module);
       // todo - make sure webpack ignores this
       return fn({ match, history, Module });
     }
