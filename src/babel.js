@@ -50,19 +50,24 @@ module.exports = {
         // else, send own render prop
         let attrModule = getAttr("module");
         let attrRender = getAttr("render");
-        let renderSrc = attrRender ? 
-          src.substring(attrRender.expression.start, attrRender.expression.end) : 
-          `({ Module, ...rest }) => Module ? 
-            (Module.default ? 
-              <Module.default {...rest} /> : 
-              <Module {...rest} />) : 
-            null`;
-        let wrapped = attrModule ? wrap(renderSrc, attrModule.value) : null;
-        if (wrapped) {
-          attrRender.expression = babylon.parse(wrapped, {
-            plugins: [ "*" ]
-          }).program.body[0].expression;
-        }
+        let attrChildren = path.node.children.filter(attr => attr.type !== 'JSXText')[0];
+        [attrRender, attrChildren].forEach(X => {
+          let pts = X ? (X.expression ? X.expression : X) : X
+          let xSrc = X ? 
+            src.substring(pts.start, pts.end) : 
+            `({ Module, match, ...rest }) => (match && Module) ? 
+              (Module.default ? 
+                <Module.default match={match} {...rest} /> : 
+                <Module match={match} {...rest} />) : 
+              null`;
+          let wrapped = (attrModule && X) ? wrap(xSrc, attrModule.value) : null;
+          if (wrapped) {
+            X.expression = babylon.parse(wrapped, {
+              plugins: [ "*" ]
+            }).program.body[0].expression;
+          }
+        })        
+        
       }
     }
   }

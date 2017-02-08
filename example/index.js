@@ -12,6 +12,7 @@ export class App extends React.Component {
           <li><Link to="/">home</Link></li>
           <li><Link to="/a">to a</Link></li>
           <li><Link to="/b">to b</Link></li>
+          <li><Link to="/c">to c</Link></li>
           <li><Link to="/asd">404</Link></li>
         </ul>
         <Route path="/" exact>
@@ -34,6 +35,11 @@ export class App extends React.Component {
             module="./b"
             render={({ Module }) => Module ? <Module.B /> : umm}
           />
+          <Route
+            path="/c"
+            exact
+            module="./c"            
+          >{({ Module }) => Module ? <Module.default /> : umm}</Route>
           <Route render={() => <span>no match</span>} />
         </Switch>
       </div>
