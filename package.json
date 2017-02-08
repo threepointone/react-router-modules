@@ -1,0 +1,26 @@
+{
+  "name": "@threepointone/react-router-modules",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config example/webpack.config.js --content-base example/ --history-api-fallback --compress --inline"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "eslint": "^3.15.0",
+    "eslint-plugin-prettier": "^2.0.0",
+    "prettier": "^0.16.0",
+    "react-dom": "^15.4.2",
+    "webpack": "^2.2.1",
+    "webpack-dev-server": "^2.3.0"
+  },
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-router-dom": "next"
+  }
+}
