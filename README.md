@@ -8,7 +8,8 @@ to prpl and beyond
 usage 
 --- 
 
-`npm install 
+`npm install @threepointone/react-router-modules`
+
 add `@threepointone/react-router-modules/babel` to your babel plugins 
 
 
