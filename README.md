@@ -58,3 +58,11 @@ matchModule('/user/213', { Module } => {
 
 constraints -
 - `path` has to be a static string
+
+todo - 
+
+- auto endpoints for data fetching 
+- prefetch links
+- `<Html/>`
+- service workers
+- all that jazz
