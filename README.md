@@ -5,6 +5,12 @@ react-router-modules
 
 to prpl and beyond
 
+usage 
+--- 
+
+`npm install 
+add `@threepointone/react-router-modules/babel` to your babel plugins 
+
 
 the big idea 
 ---
@@ -26,6 +32,7 @@ import User from './user.js'
 />
 ```
 
+- no new imports/apis
 - renders default export by default 
 - handles code splitting, SSR, behind the scenes 
 - works with `render`, `children` props as expected 
@@ -41,7 +48,18 @@ import User from './user.js'
 
 ``` 
 
+- todo - preserve server side rendered html while module asyncly loads 
+
+```jsx
+<Route path='/user/:id'
+  module='./user.js'
+  preserve />
+// this will render SSR, but split code out and load separately
+// server side rendered html will stay till module loads(!)
+```
+
 - todo - statically extract mapping of url -> modules
+
 ```jsx
 matchModule('/user/213', { Module } => {
   // and then fetch data, render <App />, whatever you like 

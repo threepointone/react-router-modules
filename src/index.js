@@ -19,17 +19,14 @@ export class Loading extends React.Component {
   }
 }
 
-export function wrap(fn, { module, load }) {
+export function wrap(fn, { module, load, defer }) {
   return ({ match, history }) => {
-    // if url matches pattern
+    
     if (!isBrowser) {
-      // assume server side, non transpiled (tho it should work with transpiled too?)
-      // todo - check if in browser, warn that babel hasn't been added
       // todo - defer
-      // load only if url matches pattern
+      
       let rrr = eval('require')
-      let Module = rrr(module);
-      // todo - make sure webpack ignores this
+      let Module = match ? rrr(module) : undefined;
       return fn({ match, history, Module });
     }
     let Module, sync = true, error;
@@ -37,7 +34,10 @@ export function wrap(fn, { module, load }) {
       listen = fn => listeners.push(fn),
       unlisten = () => listeners = [];
 
-    // load only if url matches pattern? for children func yes. always for render func
+    
+    if(!match){
+      return fn({ match, history })
+    }
     load((err, loaded) => {
       if (err) {
         // todo - retry?

@@ -30,44 +30,58 @@ function wrap(SOURCE, name) {
   // todo - chunk should have full path
 }
 
-module.exports = {
-  visitor: {
-    JSXElement(path, state) {
-      let src = path.hub.file.code;
+module.exports = function ({ types: t }) {
+  return {
+    visitor: {
+      JSXElement(path, state) {
+        let src = path.hub.file.code;
 
-      function getAttr(name) {
-        let ret = path.node.openingElement.attributes.filter(
-          attr => attr.name.name === name
-        )[0];
-        ret = ret ? ret.value : undefined;
-        return ret;
-      }
+        function getAttr(name) {
+          let ret = path.node.openingElement.attributes.filter(
+            attr => attr.name.name === name
+          )[0];
+          ret = ret ? ret.value : undefined;
+          return ret;
+        }
 
-      if (path.node.openingElement.name.name === "Route") {
-        // if component, throw error
-        // if render, wrap
-        // if children, wrap
-        // else, send own render prop
-        let attrModule = getAttr("module");
-        let attrRender = getAttr("render");
-        let attrChildren = path.node.children.filter(attr => attr.type !== 'JSXText')[0];
-        [attrRender, attrChildren].forEach(X => {
-          let pts = X ? (X.expression ? X.expression : X) : X
-          let xSrc = X ? 
-            src.substring(pts.start, pts.end) : 
-            `({ Module, match, ...rest }) => (match && Module) ? 
-              (Module.default ? 
-                <Module.default match={match} {...rest} /> : 
-                <Module match={match} {...rest} />) : 
-              null`;
-          let wrapped = (attrModule && X) ? wrap(xSrc, attrModule.value) : null;
-          if (wrapped) {
-            X.expression = babylon.parse(wrapped, {
-              plugins: [ "*" ]
-            }).program.body[0].expression;
+        if (path.node.openingElement.name.name === "Route") {
+          // if component, throw error
+          // if render, wrap
+          // if children, wrap
+          // else, send own render prop
+          let attrModule = getAttr("module");
+          let attrRender = getAttr("render");
+          let attrChildren = path.node.children.filter(attr => attr.type !== 'JSXText')[0];
+          [attrRender, attrChildren].forEach(X => {
+            let pts = X ? (X.expression ? X.expression : X) : X
+            let xSrc = X ? 
+              src.substring(pts.start, pts.end) : 
+              `({ Module, match, ...rest }) => (match && Module) ? 
+                (Module.default ? 
+                  <Module.default match={match} {...rest} /> : 
+                  <Module match={match} {...rest} />) : 
+                null`;
+            let wrapped = (attrModule && X) ? wrap(xSrc, attrModule.value) : null;
+            if (wrapped) {
+              X.expression = babylon.parse(wrapped, {
+                plugins: [ "*" ]
+              }).program.body[0].expression;
+            }
+          })  
+          if(attrModule && !attrRender && !attrChildren){
+            let wrapped = wrap(`({ Module, match, ...rest }) => (match && Module) ? 
+                (Module.default ? 
+                  <Module.default match={match} {...rest} /> : 
+                  <Module match={match} {...rest} />) : 
+                null`, attrModule.value)
+            path.node.openingElement.attributes.push(t.jSXAttribute(t.jSXIdentifier('render'), 
+                t.jSXExpressionContainer( babylon.parse(wrapped, {
+                plugins: [ "*" ]
+              }).program.body[0].expression) 
+             ))  
           }
-        })        
-        
+          
+        }
       }
     }
   }

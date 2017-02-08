@@ -26,8 +26,7 @@ export class App extends React.Component {
           <Route
             path="/a"
             exact
-            module="./a"
-            render={({ Module }) => Module ? <Module.default /> : umm}
+            module="./a"            
           />
           <Route
             path="/b"
