@@ -44,17 +44,23 @@ module.exports = {
       }
 
       if (path.node.openingElement.name.name === "Route") {
+        console.log(path.node);
         // if component, throw error
         // if render, wrap
         // if children, wrap
         // else, send own render prop
-        let m = getAttr("module");
-        let n = getAttr("render");
-        let xed = m && n
-          ? wrap(src.substring(n.expression.start, n.expression.end), m.value)
-          : null;
-        if (xed) {
-          n.expression = babylon.parse(xed, {
+        let attrModule = getAttr("module");
+        let attrRender = getAttr("render");
+        let renderSrc = attrRender ? 
+          src.substring(attrRender.expression.start, attrRender.expression.end) : 
+          `({ Module, ...rest }) => Module ? 
+            (Module.default ? 
+              <Module.default {...rest} /> : 
+              <Module {...rest} />) : 
+            null`;
+        let wrapped = attrModule ? wrap(renderSrc, m.value) : null;
+        if (wrapped) {
+          attrRender.expression = babylon.parse(wrapped, {
             plugins: [ "*" ]
           }).program.body[0].expression;
         }

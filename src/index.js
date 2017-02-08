@@ -15,8 +15,7 @@ export class Loading extends React.Component {
   render() {
     let { match, history } = this.props.args;
     let { error, Module } = this.state;
-    let x = this.props.fn({ match, history, error, Module });
-    return x;
+    return this.props.fn({ match, history, error, Module });
   }
 }
 

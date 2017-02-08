@@ -14,7 +14,14 @@ export class App extends React.Component {
           <li><Link to="/b">to b</Link></li>
           <li><Link to="/asd">404</Link></li>
         </ul>
+        <Route path="/" exact>
+            {({ match }) =>
+              match
+                ? <span> home sweet home </span>
+                : <span> searching... </span>}
+          </Route>
         <Switch>
+          
           <Route
             path="/a"
             exact

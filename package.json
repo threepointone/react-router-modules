@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
-    "start": "webpack-dev-server --config example/webpack.config.js --content-base example/ --history-api-fallback --compress --inline"
+    "start": "webpack-dev-server --config example/webpack.config.js --content-base example/ --history-api-fallback --compress --inline",
+    "build": "babel src -d lib --presets es2015,stage-0,react"
   },
   "license": "MIT",
   "devDependencies": {
