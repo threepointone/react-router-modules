@@ -60,12 +60,12 @@ data fetching
 // user.js
 import { data } from 'rakt'
 
-@data(async ({ req, res }) => {  
+@data((req, res, next) => {  
   // literally write an express route here 
   // gets removed from client side bundle
   let db = require('mongo')(3111)
-  let res = await db.get('users', req.params.id)
-  res.send(res)
+  db.get('users', req.params.id, (err, profile) => 
+    err ? next(err) : res.send(profile))  
 })
 export default class User {
   render(){
