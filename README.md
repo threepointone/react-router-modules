@@ -18,22 +18,15 @@ the big idea
 
 we make a single change to the `<Route/>` api
 
-```jsx
-// this 
-import User from './user.js'
-// ...
+```diff
+- import User from './user.js'
 <Route path='/user/:id'
-  component={User}
-/>
-
-// becomes this 
-// ...
-<Route path='/user/:id'
-  module='./user.js'
+-  component={User}
++  module='./user.js'
 />
 ```
 
-- no new imports/apis
+- no new imports/apis, everything works as usual
 - renders default export by default 
 - handles code splitting, SSR, behind the scenes 
 - works with `render`, `children` props as expected 
@@ -42,7 +35,7 @@ import User from './user.js'
 <Route path='/user/:id'
   module='./user.js'
   render={ ({ Module }) => Module ? 
-    <Module.default /> : 
+    <Module.Profile /> : 
     <span>loading...</span> )}
 />
 // or use children-func, to render even when path doesn't match
@@ -76,7 +69,7 @@ matchModule('/user/213', { Module } => {
 ```
 
 constraints -
-- `path` has to be a static string
+- For SSR to work, `path` has to be a static string
 
 todo - 
 
