@@ -1,22 +1,34 @@
-react-router-modules
+rakt
 ---
 
-[work in progress]
+[work in progress.]
 
-to prpl and beyond
+a framework. for react/dialects. in a box.
 
 usage 
 --- 
 
-`npm install @threepointone/react-router-modules`
+`npm install rakt -g`
 
-add `@threepointone/react-router-modules/babel` to your babel plugins 
+quick start
+---
 
+```jsx
+// index.js
+export default App = () => 
+  <div>hello world</div>
+```
+
+and then run 
+
+```
+$ rakt index.js   
+```
 
 the big idea 
 ---
 
-we make a single change to the `<Route/>` api
+we augment react-router's `<Route/>` api with one change
 
 ```diff
 - import User from './user.js'
@@ -28,8 +40,9 @@ we make a single change to the `<Route/>` api
 
 - no new imports/apis, everything works as usual
 - renders default export by default 
-- handles code splitting, SSR, behind the scenes 
+- handles code splitting, SSR, css, behind the scenes 
 - works with `render`, `children` props as expected 
+
 
 ```jsx
 <Route path='/user/:id'
@@ -38,43 +51,72 @@ we make a single change to the `<Route/>` api
     <Module.Profile /> : 
     <span>loading...</span> )}
 />
-// or use children-func, to render even when path doesn't match
-
 ``` 
 
-- todo - preserve server side rendered html while module asyncly loads 
+data fetching
+---
 
 ```jsx
-<Route path='/user/:id'
-  module='./user.js'
-  preserve />
-// this will render SSR, but split code out and load separately
-// server side rendered html will stay till module loads(!)
-```
+// user.js
+import { data } from 'rakt'
 
-- todo - statically extract mapping of url -> modules
-
-```jsx
-matchModule('/user/213', { Module } => {
-  // and then fetch data, render <App />, whatever you like 
+@data(async ({ req, res }) => {  
+  // literally write an express route here 
+  // gets removed from client side bundle
+  let db = require('mongo')(3111)
+  let res = await db.get('users', req.params.id)
+  res.send(res)
 })
+export default class User {
+  render(){
+    return <div>
+      {this.props.data || 'loading data'}
+    </div>  
+  }
+  
+// and elsewhere 
+<Route path='/user/:id' module='./user.js' />
 
-// you can now expose this via an api endpoint. and handle data fetching, etc 
-// this can also get treeshaked out lol
+// ... that's it! we'll take care of setting up endpoints, hydrating, etc
+// you're free to augment with your own systems - relay, redux, whatevs 
 ```
 
-- use in tandem with your server for PRPL
-```jsx
-// TODO
-```
+
+prpl ootb
+---
+
+[todo]
+
+
+configuration
+---
+
+[todo]
+
+
+integrating with other apps
+---
+
+you can take pieces from rakt and use them in your own app sans the rakt stack. 
+
+- `rackt/babel` - 
+- `rackt/api` - 
+- `rackt/assets` - 
+
+[todo] etc etc 
+
 
 constraints -
+
 - For SSR to work, `path` has to be a static string
+- async fetching won't work without a server
 
 todo - 
 
 - auto endpoints for data fetching 
 - prefetch links
-- `<Html/>`
+- websockets?
+- preserve server side rendered html while module asyncly loads 
+- `<Html/>`, `<Head/>`, `<Document/>`
 - service workers
 - all that jazz
