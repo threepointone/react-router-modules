@@ -74,9 +74,6 @@ export default class User {
     </div>  
   }
   
-// and elsewhere 
-<Route path='/user/:id' module='./user.js' />
-
 // ... that's it! we'll take care of setting up 
 // endpoints, hydrating, etc
 // you're free to augment with your own systems 
