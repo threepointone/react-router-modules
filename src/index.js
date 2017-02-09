@@ -1,7 +1,6 @@
 import React from "react";
 let isBrowser = typeof window !== "undefined";
 
-// import { matchPath } from 'react-router-dom'
 export class Loading extends React.Component {
   state = { error: undefined, Module: undefined };
   componentDidMount() {

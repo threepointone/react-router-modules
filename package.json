@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "start": "webpack-dev-server --config example/webpack.config.js --content-base example/ --history-api-fallback --compress --inline",
-    "build": "babel src -d lib --presets es2015,stage-0,react"
+    "static": "babel-node example/static.js",
+    "build": "babel src -d lib"
   },
   "license": "MIT",
   "devDependencies": {
