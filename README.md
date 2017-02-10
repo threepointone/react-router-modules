@@ -58,14 +58,13 @@ data fetching
 
 ```jsx
 // user.js
-import { data } from 'rakt'
+import { initial } from 'rakt'
 
-@data((req, res, next) => {  
-  // literally write an express route here 
+@initial(({ req }, done) => {  
+  // write server side friendly code here 
   // gets removed from client side bundle
   let db = require('mongo')(3111)
-  db.get('users', req.params.id, (err, profile) => 
-    err ? next(err) : res.send(profile))  
+  db.get('users', req.params.id, done)  
 })
 export default class User {
   render(){
@@ -76,10 +75,14 @@ export default class User {
   
 // ... that's it! we'll take care of setting up 
 // endpoints, hydrating, etc
+// - starts loading data *before* the component has loaded 
 // you're free to augment with your own systems 
 // - relay, redux, whatevs 
+
+
 ```
 
+todo - `@socket`, `@sse`, `@memory`, etc 
 
 prpl ootb
 ---
@@ -105,6 +108,7 @@ you can take pieces from rakt and use them in your own app sans the rakt stack.
 [todo] etc etc 
 
 
+
 constraints -
 
 - For SSR to work, `path` has to be a static string
@@ -115,6 +119,7 @@ todo -
 - auto endpoints for data fetching 
 - prefetch links
 - websockets?
+- work with aliased modules 
 - preserve server side rendered html while module asyncly loads 
 - `<Html/>`, `<Head/>`, `<Document/>`
 - service workers
